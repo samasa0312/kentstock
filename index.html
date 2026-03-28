@@ -17,35 +17,43 @@
         
         body { 
             font-family: 'Inter', 'Noto Sans TC', sans-serif; 
-            background-color: #f8fafc; /* slate-50 舒適明亮背景 */
-            color: #1e293b; /* slate-800 實心深色文字 */
+            background-color: #e0f2fe; /* 備用明亮底色 */
+            /* 修正圖片路徑：使用 %20 替代空格，確保瀏覽器能正確載入 */
+            background-image: url('./123.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #1e293b; 
+            margin: 0;
+            overflow: hidden;
         }
         
         .font-tech-mono { font-family: 'JetBrains Mono', monospace; }
         
+        /* 科技感滾動條 - 實體明亮版 */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; border: 2px solid #f1f5f9; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.8); }
+        ::-webkit-scrollbar-thumb { 
+            background: #7dd3fc; 
+            border-radius: 8px; 
+            border: 2px solid rgba(241, 245, 249, 1); 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 舒適柔和背景圖樣 */
-        .comfy-bg {
-            position: relative;
-            background-image: 
-                linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
-            background-size: 32px 32px;
-            background-position: center center;
-        }
-        
-        /* 明亮實體面板 */
-        .comfy-panel {
-            background-color: #ffffff; /* 純白面板 */
-            border: 1px solid #e2e8f0; /* slate-200 邊框 */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        /* 高科技實體微透白面板 (移除毛玻璃 blur 特效) */
+        .content-panel {
+            background: rgba(255, 255, 255, 0.92); 
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 80, 200, 0.08);
             border-radius: 0.75rem;
+        }
+
+        /* 藍色科技光暈 (適度保留於重點 Icon) */
+        .holo-glow {
+            filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.5));
         }
 
         @keyframes modal-enter {
@@ -56,19 +64,19 @@
             animation: modal-enter 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* 缺料醒目警告框 (明亮模式) */
+        /* 缺料醒目警告框 (實體版) */
         .shortage-alert-card {
-            border-color: #fca5a5; /* red-300 */
-            background-color: #fef2f2; /* red-50 */
-            box-shadow: 0 0 0 1px #f87171 inset, 0 4px 10px rgba(239, 68, 68, 0.1);
+            border-color: #fca5a5; 
+            background-color: #fef2f2; 
+            box-shadow: 0 0 0 1px #f87171 inset, 0 4px 10px rgba(239, 68, 68, 0.05);
         }
         .shortage-alert-card:hover {
-            border-color: #ef4444; /* red-500 */
-            box-shadow: 0 0 0 1px #ef4444 inset, 0 4px 15px rgba(239, 68, 68, 0.2);
+            border-color: #ef4444; 
+            box-shadow: 0 0 0 1px #ef4444 inset, 0 4px 15px rgba(239, 68, 68, 0.1);
         }
     </style>
 </head>
-<body class="comfy-bg font-sans">
+<body class="font-sans antialiased text-slate-800 min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -145,7 +153,7 @@
                         resolve(workbook);
                     } catch (err) { reject(err); }
                 };
-                reader.onerror = (e) => reject(e); // 增強錯誤捕捉
+                reader.onerror = (e) => reject(e);
                 reader.readAsArrayBuffer(file);
             });
         };
@@ -184,15 +192,15 @@
 
         const StatusBadge = ({ status, className = "" }) => {
             const getColors = (s) => {
-                if (!s) return 'bg-slate-100 text-slate-600 border-slate-300';
+                if (!s) return 'bg-slate-100 text-slate-600 border-slate-200';
                 const str = s.toString();
-                if (str.includes('量產')) return 'bg-emerald-100 text-emerald-800 border-emerald-300';
-                if (str.includes('外包')) return 'bg-purple-100 text-purple-800 border-purple-300';
-                if (str.includes('驗證')) return 'bg-indigo-100 text-indigo-800 border-indigo-300';
-                if (str.includes('待出貨') || str.includes('計畫') || str.includes('待包裝')) return 'bg-amber-100 text-amber-800 border-amber-300';
-                if (str.includes('已發料') || str.includes('收料')) return 'bg-blue-100 text-blue-800 border-blue-300';
-                if (str.includes('缺料') || str.includes('異常')) return 'bg-red-100 text-red-800 border-red-300 shadow-sm';
-                return 'bg-slate-100 text-slate-600 border-slate-300';
+                if (str.includes('量產')) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                if (str.includes('外包')) return 'bg-purple-50 text-purple-700 border-purple-200';
+                if (str.includes('驗證')) return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+                if (str.includes('待出貨') || str.includes('計畫') || str.includes('待包裝')) return 'bg-amber-50 text-amber-700 border-amber-200';
+                if (str.includes('已發料') || str.includes('收料')) return 'bg-blue-50 text-blue-700 border-blue-200';
+                if (str.includes('缺料') || str.includes('異常')) return 'bg-red-50 text-red-700 border-red-300';
+                return 'bg-slate-100 text-slate-600 border-slate-200';
             };
             return <span className={`px-2.5 py-1 rounded-md text-xs font-bold border whitespace-nowrap inline-block transition-all ${getColors(status)} ${className}`}>{status || '未知'}</span>;
         };
@@ -304,43 +312,43 @@
             if (!item) return null;
             const years = [2025, 2026, 2027, 2028, 2029, 2030];
             return (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}>
-                    <div className="bg-white w-full max-w-5xl rounded-2xl shadow-xl border border-slate-200 flex flex-col modal-animate overflow-hidden" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60" onClick={onClose}>
+                    <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col modal-animate overflow-hidden" onClick={e => e.stopPropagation()}>
                         <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center relative">
-                            <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
+                            <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
                             <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-white border border-slate-200 text-blue-600 shadow-sm"><Icon name="layout" /></div>
+                                <div className="p-2 rounded-lg bg-white border border-slate-200 text-blue-600"><Icon name="layout" /></div>
                                 <div>
                                     <h3 className="text-xl font-bold text-slate-800 tracking-wider text-left">季報與平均明細</h3>
-                                    <p className="text-sm text-slate-500 font-mono mt-0.5 text-left">{item.id}</p>
+                                    <p className="text-sm text-blue-600 font-mono mt-0.5 text-left">{item.id}</p>
                                 </div>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-slate-600 transition-all"><Icon name="x" /></button>
+                            <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-blue-600 transition-all"><Icon name="x" /></button>
                         </div>
                         <div className="p-6 overflow-auto max-h-[70vh]">
                             <table className="w-full table-auto text-left border-collapse">
-                                <thead className="bg-slate-100 text-slate-600 text-sm font-bold uppercase tracking-wider border-b border-slate-300">
+                                <thead className="bg-slate-50 text-blue-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200">
                                     <tr>
                                         <th className="px-4 py-3 whitespace-nowrap">年度</th>
-                                        <th className="px-4 py-3 text-blue-700 whitespace-nowrap">總用量</th>
+                                        <th className="px-4 py-3 text-blue-600 whitespace-nowrap">總用量</th>
                                         <th className="px-4 py-3 text-slate-600 whitespace-nowrap">第1季</th>
                                         <th className="px-4 py-3 text-slate-600 whitespace-nowrap">第2季</th>
                                         <th className="px-4 py-3 text-slate-600 whitespace-nowrap">第3季</th>
                                         <th className="px-4 py-3 text-slate-600 whitespace-nowrap">第4季</th>
-                                        <th className="px-4 py-3 text-emerald-700 whitespace-nowrap">平均值</th>
+                                        <th className="px-4 py-3 text-emerald-600 whitespace-nowrap">平均值</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-base font-mono divide-y divide-slate-100 text-slate-700">
                                     {years.map(yr => {
                                         const d = item.yearlyData[yr] || {};
                                         return (
-                                            <tr key={yr} className="hover:bg-slate-50 transition-colors">
+                                            <tr key={yr} className="hover:bg-blue-50/50 transition-colors">
                                                 <td className="px-4 py-4 font-bold text-slate-800 font-sans whitespace-nowrap">{yr}</td>
                                                 <td className="px-4 py-4 font-black text-blue-600 text-lg whitespace-nowrap">{d.usage}</td>
-                                                <td className="px-4 py-4 text-slate-600 whitespace-nowrap">{d.q1}</td>
-                                                <td className="px-4 py-4 text-slate-600 whitespace-nowrap">{d.q2}</td>
-                                                <td className="px-4 py-4 text-slate-600 whitespace-nowrap">{d.q3}</td>
-                                                <td className="px-4 py-4 text-slate-600 whitespace-nowrap">{d.q4}</td>
+                                                <td className="px-4 py-4 whitespace-nowrap">{d.q1}</td>
+                                                <td className="px-4 py-4 whitespace-nowrap">{d.q2}</td>
+                                                <td className="px-4 py-4 whitespace-nowrap">{d.q3}</td>
+                                                <td className="px-4 py-4 whitespace-nowrap">{d.q4}</td>
                                                 <td className="px-4 py-4 font-bold text-emerald-600 text-lg whitespace-nowrap">{d.avg}</td>
                                             </tr>
                                         );
@@ -349,7 +357,7 @@
                             </table>
                         </div>
                         <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
-                            <button onClick={onClose} className="px-6 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-base shadow-sm hover:bg-slate-700 transition-colors">關閉視窗</button>
+                            <button onClick={onClose} className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-bold text-base shadow-md hover:bg-blue-700 transition-colors">關閉視窗</button>
                         </div>
                     </div>
                 </div>
@@ -362,16 +370,16 @@
                 return (
                     <button 
                         onClick={() => setModule(id)} 
-                        className={`px-3 py-1.5 text-sm font-bold rounded-md transition-all whitespace-nowrap flex items-center gap-1.5 ${isActive ? 'bg-white text-blue-600 border border-slate-200 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                        className={`px-3 py-1.5 text-sm font-bold rounded-md transition-all whitespace-nowrap flex items-center gap-1.5 ${isActive ? 'bg-white text-blue-600 border border-slate-200 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-white/80 border border-transparent'}`}
                     >
                         {label}
                         {globalSearch ? (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-tech-mono ${isActive ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-slate-200/70 text-slate-500 border border-slate-300/50'}`}>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-tech-mono ${isActive ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-slate-100 text-slate-500 border border-slate-300'}`}>
                                 篩選:{counts[id] || 0}
                             </span>
                         ) : (
                             (counts[id] > 0) ? (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-tech-mono ${isActive ? 'bg-slate-100 text-slate-500 border border-slate-200' : 'bg-slate-200/50 text-slate-400 border border-slate-200/50'}`}>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-tech-mono ${isActive ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-slate-100 text-slate-500 border border-slate-200'}`}>
                                     {counts[id]}
                                 </span>
                             ) : null
@@ -381,11 +389,11 @@
             };
 
             return (
-                <div className="bg-slate-100 p-1 rounded-xl border border-slate-200 flex shrink-0 w-full md:w-auto overflow-x-auto gap-0.5">
-                    {getBtn('order', '訂單管理')}
-                    {getBtn('inventory', '用料分配')}
+                <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200 flex shrink-0 w-full md:w-auto overflow-x-auto gap-0.5">
                     {getBtn('materialInventory', '物料庫存')}
                     {getBtn('consumableInventory', '耗材庫存')}
+                    {getBtn('order', '訂單管理')}
+                    {getBtn('inventory', '用料明細')}
                 </div>
             );
         };
@@ -417,43 +425,42 @@
             return (
                 <div className="flex flex-col h-full p-4 sm:p-6 text-left">
                     {data.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center flex-1 text-slate-500 p-8">
-                            <div className="comfy-panel rounded-full p-8 mb-6">
+                        <div className="flex flex-col items-center justify-center flex-1 text-blue-600 p-8">
+                            <div className="content-panel rounded-full p-8 mb-6 holo-glow border-slate-200">
                                 <Icon name="crosshair" className="w-20 h-20 text-blue-500" />
                             </div>
-                            <p className="text-2xl font-bold text-slate-700 tracking-wider text-center">系統待命中</p>
-                            <p className="text-lg mt-4 text-slate-500 tracking-wide text-center">請手動上傳訂單 Excel 資料</p>
+                            <p className="text-lg mt-4 text-blue-700 tracking-widest text-center font-mono">請手動上傳訂單 Excel 資料</p>
                         </div>
                     ) : (
                         <>
                             <div className="flex gap-2 mb-0">
-                                <button onClick={() => setActiveTab('recv')} className={`px-6 py-3 sm:px-8 sm:py-4 rounded-t-xl text-base sm:text-lg font-bold border-t border-x transition-all ${activeTab === 'recv' ? 'bg-white text-blue-700 border-slate-200 shadow-sm z-10' : 'bg-slate-100 text-slate-500 border-transparent hover:bg-slate-50'}`}>
+                                <button onClick={() => setActiveTab('recv')} className={`px-6 py-3 sm:px-8 sm:py-4 rounded-t-xl text-base sm:text-lg font-bold border-t border-x transition-all ${activeTab === 'recv' ? 'bg-white text-blue-700 border-slate-200 shadow-sm z-10' : 'bg-slate-100/80 text-slate-500 border-transparent hover:bg-white/80 hover:text-blue-600'}`}>
                                     預計進貨 <span className="font-tech-mono ml-1">[{filteredRecv.length}]</span>
                                 </button>
-                                <button onClick={() => setActiveTab('ship')} className={`px-6 py-3 sm:px-8 sm:py-4 rounded-t-xl text-base sm:text-lg font-bold border-t border-x transition-all ${activeTab === 'ship' ? 'bg-white text-blue-700 border-slate-200 shadow-sm z-10' : 'bg-slate-100 text-slate-500 border-transparent hover:bg-slate-50'}`}>
+                                <button onClick={() => setActiveTab('ship')} className={`px-6 py-3 sm:px-8 sm:py-4 rounded-t-xl text-base sm:text-lg font-bold border-t border-x transition-all ${activeTab === 'ship' ? 'bg-white text-blue-700 border-slate-200 shadow-sm z-10' : 'bg-slate-100/80 text-slate-500 border-transparent hover:bg-white/80 hover:text-blue-600'}`}>
                                     預計出貨 <span className="font-tech-mono ml-1">[{filteredShip.length}]</span>
                                 </button>
                             </div>
 
-                            <div className="comfy-panel rounded-tl-none flex-1 overflow-hidden flex flex-col bg-white">
+                            <div className="content-panel rounded-tl-none flex-1 overflow-hidden flex flex-col">
                                 <div className="overflow-auto flex-1">
-                                    <table className="w-full table-auto text-left border-collapse min-w-max">
-                                        <thead className="bg-slate-100 sticky top-0 z-10 text-xs sm:text-sm font-bold text-slate-600 uppercase tracking-widest border-b border-slate-300">
+                                    <table className="w-full table-auto text-left border-collapse min-w-max bg-white">
+                                        <thead className="bg-slate-50 sticky top-0 z-10 text-xs sm:text-sm font-bold text-blue-800 uppercase tracking-widest border-b border-slate-200">
                                             <tr>
                                                 <th className="px-3 py-3 w-12 text-center whitespace-nowrap">#</th>
                                                 {columns.filter(c => activeTab === 'recv' ? c.id !== 'shipDate' : c.id !== 'recvDate').filter(c => !['notes', 'remarks'].includes(c.id)).map(col => (
-                                                    <th key={col.id} className={`px-3 py-3 min-w-[90px] break-words ${col.id.includes('Date') ? 'text-blue-700' : ''}`}>{col.label}</th>
+                                                    <th key={col.id} className={`px-3 py-3 min-w-[90px] break-words ${col.id.includes('Date') ? 'text-blue-600' : ''}`}>{col.label}</th>
                                                 ))}
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                                             {displayData.map((row, idx) => (
                                                 <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                                                    <td className="px-3 py-2 text-center text-slate-500 font-tech-mono whitespace-nowrap">{idx + 1}</td>
+                                                    <td className="px-3 py-2 text-center text-slate-400 font-tech-mono whitespace-nowrap">{idx + 1}</td>
                                                     {columns.filter(c => activeTab === 'recv' ? c.id !== 'shipDate' : c.id !== 'recvDate').filter(c => !['notes', 'remarks'].includes(c.id)).map(col => (
-                                                        <td key={col.id} className={`px-3 py-2 min-w-[90px] max-w-[250px] break-words ${col.id === 'workOrder' ? 'text-blue-600 font-bold text-base' : ''}`}>
+                                                        <td key={col.id} className={`px-3 py-2 min-w-[90px] max-w-[250px] break-words ${col.id === 'workOrder' ? 'text-blue-700 font-bold text-base' : ''}`}>
                                                             {col.id === 'workOrder' ? (
-                                                                <button onClick={() => setSelected(row)} className="hover:underline text-left break-all">{row[col.id]}</button>
+                                                                <button onClick={() => setSelected(row)} className="hover:underline hover:text-blue-500 text-left break-all">{row[col.id]}</button>
                                                             ) : row[col.id] || '-'}
                                                         </td>
                                                     ))}
@@ -470,19 +477,19 @@
                     )}
                     
                     {selected && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" onClick={() => setSelected(null)}>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60" onClick={() => setSelected(null)}>
                             <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-xl overflow-hidden shadow-2xl modal-animate" onClick={e => e.stopPropagation()}>
                                 <div className="bg-slate-50 p-5 border-b border-slate-200 flex justify-between items-center relative">
                                     <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
                                     <div className="font-bold text-slate-800 pl-2 text-xl text-left">工單明細：{selected.workOrder}</div>
-                                    <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-600 transition-colors"><Icon name="x" className="w-6 h-6" /></button>
+                                    <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-blue-600 transition-colors"><Icon name="x" className="w-6 h-6" /></button>
                                 </div>
                                 <div className="p-6 space-y-5 text-left max-h-[70vh] overflow-y-auto">
                                     <div><label className="text-sm font-bold text-blue-600 uppercase">作業注意事項</label><div className="bg-slate-50 p-4 rounded-lg mt-2 text-base border border-slate-200 text-slate-700 leading-relaxed whitespace-pre-wrap">{selected.notes || '無'}</div></div>
                                     <div><label className="text-sm font-bold text-blue-600 uppercase">備註</label><div className="bg-slate-50 p-4 rounded-lg mt-2 text-base border border-slate-200 text-slate-700 leading-relaxed whitespace-pre-wrap">{selected.remarks || '無'}</div></div>
                                 </div>
                                 <div className="bg-slate-50 px-6 py-4 flex justify-end border-t border-slate-200">
-                                    <button onClick={() => setSelected(null)} className="px-6 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-base hover:bg-slate-700 transition-colors shadow-sm">關閉視窗</button>
+                                    <button onClick={() => setSelected(null)} className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-bold text-base hover:bg-blue-700 transition-colors shadow-md">關閉視窗</button>
                                 </div>
                             </div>
                         </div>
@@ -540,20 +547,19 @@
             return (
                 <div className="flex flex-col h-full p-4 sm:p-6 text-left">
                     {(!data.workOrders?.length && !data.issued?.length && !data.pendingShipment?.length) ? (
-                        <div className="flex flex-col items-center justify-center flex-1 text-slate-500 p-8">
-                            <div className="comfy-panel rounded-full p-6 mb-6">
+                        <div className="flex flex-col items-center justify-center flex-1 text-blue-600 p-8">
+                            <div className="content-panel rounded-full p-6 mb-6 holo-glow border-slate-200">
                                 <Icon name="file-up" className="w-16 h-16 text-blue-500" />
                             </div>
-                            <p className="text-2xl font-bold text-slate-700 tracking-wider text-center">系統待命中</p>
-                            <p className="text-base mt-3 text-slate-500 tracking-wide text-center">請手動上傳用料分配 Excel 資料</p>
+                            <p className="text-base mt-3 text-blue-700 tracking-widest text-center font-mono">請手動上傳用料明細 Excel 資料</p>
                         </div>
                     ) : (
                         <>
                             <div className="flex flex-wrap gap-2 sm:gap-4 mb-4">
                                 {tabs.map(t => (
-                                    <button key={t.id} onClick={() => setActiveTab(t.name)} className={`flex items-center gap-1 sm:gap-2 pb-2 px-1 sm:px-2 border-b-2 font-bold text-sm sm:text-base transition-all ${activeTab === t.name ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}>
+                                    <button key={t.id} onClick={() => setActiveTab(t.name)} className={`flex items-center gap-1 sm:gap-2 pb-2 px-1 sm:px-2 border-b-2 font-bold text-sm sm:text-base transition-all ${activeTab === t.name ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-blue-600'}`}>
                                         <Icon name={t.icon} className="w-4 h-4 sm:w-5 sm:h-5" /> {t.name}
-                                        <span className={`px-2 py-0.5 rounded text-[10px] sm:text-xs font-mono border ${activeTab === t.name ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-slate-100 border-slate-200 text-slate-500'}`}>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] sm:text-xs font-mono border ${activeTab === t.name ? 'bg-blue-100 border-blue-200 text-blue-700' : 'bg-white/80 border-slate-200 text-slate-500'}`}>
                                             {filteredCounts[t.id] || 0}
                                         </span>
                                     </button>
@@ -561,22 +567,22 @@
                             </div>
                             <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-6">
                                 {grouped.map(g => (
-                                    <div key={g.id} onClick={() => setSelected(g)} className={`comfy-panel p-4 sm:p-5 cursor-pointer transition-all hover:border-blue-400 bg-white ${g.hasShortage ? 'shortage-alert-card border-red-300' : ''}`}>
+                                    <div key={g.id} onClick={() => setSelected(g)} className={`content-panel p-4 sm:p-5 cursor-pointer transition-all hover:border-blue-300 hover:bg-white bg-white/95 ${g.hasShortage ? 'shortage-alert-card' : ''}`}>
                                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start text-left gap-3 sm:gap-0">
                                             <div className="flex gap-3 items-center flex-wrap">
                                                 <StatusBadge status={g.mainStatus} />
                                                 <div className="text-lg sm:text-xl font-bold text-slate-800 break-all">{g.id}</div>
                                                 {g.hasShortage && (
-                                                    <div className="flex items-center gap-1 bg-red-100 border border-red-300 text-red-700 px-2 py-1 rounded text-xs sm:text-sm font-bold">
-                                                        <Icon name="alert" className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 animate-bounce" /> 缺料警告
+                                                    <div className="flex items-center gap-1 bg-red-100 border border-red-200 text-red-600 px-2 py-1 rounded text-xs sm:text-sm font-bold shadow-sm">
+                                                        <Icon name="alert" className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 animate-bounce" /> 缺料警告
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="text-sm sm:text-base font-tech-mono text-slate-500 whitespace-nowrap sm:ml-4 bg-slate-50 px-3 py-1 rounded border border-slate-200 w-fit shrink-0">需求: <span className="text-blue-600 font-bold text-lg sm:text-xl">{g.mainQty}</span></div>
+                                            <div className="text-sm sm:text-base font-tech-mono text-slate-600 whitespace-nowrap sm:ml-4 bg-slate-50 px-3 py-1 rounded border border-slate-200 w-fit shrink-0">需求: <span className="text-blue-600 font-bold text-lg sm:text-xl">{g.mainQty}</span></div>
                                         </div>
-                                        <div className="mt-3 text-sm sm:text-base text-slate-500 text-left break-words"><span className="font-bold text-slate-700">{g.customer}</span> <span className="mx-2 text-slate-300">|</span> <span>{g.mainSpec}</span></div>
+                                        <div className="mt-3 text-sm sm:text-base text-slate-600 text-left break-words"><span className="font-bold text-slate-800">{g.customer}</span> <span className="mx-2 text-slate-300">|</span> <span>{g.mainSpec}</span></div>
                                         {g.hasShortage && (
-                                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-red-200 pt-4">
+                                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-red-100 pt-4">
                                                 {g.items.filter(i => i.status.includes('缺料')).map((i, idx) => (
                                                     <div key={idx} className="bg-red-50 p-3 rounded-lg border border-red-200 text-xs sm:text-sm flex flex-col sm:flex-row justify-between sm:items-start gap-2 sm:gap-0">
                                                         <div className="flex flex-col min-w-0 pr-2">
@@ -586,7 +592,7 @@
                                                             </div>
                                                             <div className="text-[10px] sm:text-xs text-slate-500 pl-6 mt-1 break-words">{i.spec || '-'}</div>
                                                         </div>
-                                                        <span className="text-red-600 font-bold font-tech-mono whitespace-nowrap bg-white px-2 py-1 rounded border border-red-100 shadow-sm shrink-0 w-fit sm:w-auto self-start sm:self-auto">庫存: {getDisplayStock(i.partNo, i.stockQty)}</span>
+                                                        <span className="text-red-600 font-bold font-tech-mono whitespace-nowrap bg-white px-2 py-1 rounded border border-red-200 shadow-sm shrink-0 w-fit sm:w-auto self-start sm:self-auto">庫存: {getDisplayStock(i.partNo, i.stockQty)}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -594,39 +600,39 @@
                                     </div>
                                 ))}
                                 {grouped.length === 0 && (
-                                    <div className="text-center py-20 text-slate-500 font-bold text-base sm:text-lg">查無相符的用料分配資料</div>
+                                    <div className="text-center py-20 text-slate-500 font-bold text-base sm:text-lg">查無相符的用料明細資料</div>
                                 )}
                             </div>
                         </>
                     )}
 
                     {selected && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" onClick={() => setSelected(null)}>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60" onClick={() => setSelected(null)}>
                             <div className="bg-white border border-slate-200 w-full max-w-5xl max-h-[80vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col modal-animate" onClick={e => e.stopPropagation()}>
                                 <div className="bg-slate-50 p-4 sm:p-5 border-b border-slate-200 flex justify-between items-center relative">
                                     <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
-                                    <div className="font-bold text-slate-800 pl-2 text-lg sm:text-xl text-left break-all pr-4">{selected.id} <span className="text-sm sm:text-base text-slate-500 font-normal ml-2 whitespace-nowrap">用料清單</span></div>
-                                    <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-slate-700 transition-colors shrink-0"><Icon name="x" className="w-5 h-5 sm:w-6 sm:h-6" /></button>
+                                    <div className="font-bold text-slate-800 pl-2 text-lg sm:text-xl text-left break-all pr-4">{selected.id} <span className="text-sm sm:text-base text-blue-500 font-normal ml-2 whitespace-nowrap">用料明細</span></div>
+                                    <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-blue-600 transition-colors shrink-0"><Icon name="x" className="w-5 h-5 sm:w-6 sm:h-6" /></button>
                                 </div>
-                                <div className="overflow-auto flex-1 p-4 sm:p-6 bg-slate-50/50 text-left">
-                                    <div className="comfy-panel overflow-hidden bg-white">
+                                <div className="overflow-auto flex-1 p-4 sm:p-6 bg-slate-50 text-left">
+                                    <div className="bg-white overflow-hidden border border-slate-200 shadow-sm rounded-lg">
                                         <table className="w-full table-auto text-left text-sm sm:text-base text-slate-700">
-                                            <thead className="bg-slate-100 sticky top-0 text-slate-600 font-bold uppercase text-[10px] sm:text-xs tracking-widest border-b border-slate-300">
+                                            <thead className="bg-slate-50 sticky top-0 text-blue-700 font-bold uppercase text-[10px] sm:text-xs tracking-widest border-b border-slate-200">
                                                 <tr>
                                                     <th className="p-3 sm:p-4 whitespace-nowrap">料號</th>
                                                     <th className="p-3 sm:p-4 min-w-[200px]">品名規格</th>
-                                                    <th className="p-3 sm:p-4 text-center text-blue-700 whitespace-nowrap">領用需求</th>
+                                                    <th className="p-3 sm:p-4 text-center text-blue-600 whitespace-nowrap">領用需求</th>
                                                     <th className="p-3 sm:p-4 text-center whitespace-nowrap">目前庫存</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-100">
                                                 {selected.items.map((i, idx) => (
-                                                    <tr key={idx} className={`hover:bg-slate-50 transition-colors ${i.status.includes('缺料') ? 'bg-red-50' : ''}`}>
+                                                    <tr key={idx} className={`hover:bg-blue-50/50 transition-colors ${i.status.includes('缺料') ? 'bg-red-50/80' : ''}`}>
                                                         <td className={`p-3 sm:p-4 font-tech-mono break-all ${i.status.includes('缺料') ? 'text-red-600 font-bold flex items-start gap-2' : ''}`}>
-                                                            {i.status.includes('缺料') && <Icon name="alert" className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse shrink-0 mt-0.5" />}
+                                                            {i.status.includes('缺料') && <Icon name="alert" className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse shrink-0 mt-0.5 text-red-500" />}
                                                             <span>{i.partNo}</span>
                                                         </td>
-                                                        <td className="p-3 sm:p-4 text-xs sm:text-sm font-sans leading-relaxed break-words">{i.spec}</td>
+                                                        <td className="p-3 sm:p-4 text-xs sm:text-sm font-sans leading-relaxed break-words text-slate-600">{i.spec}</td>
                                                         <td className="p-3 sm:p-4 text-center font-bold text-blue-600 font-tech-mono text-base sm:text-lg whitespace-nowrap">{i.qty}</td>
                                                         <td className={`p-3 sm:p-4 text-center font-tech-mono text-base sm:text-lg whitespace-nowrap ${i.status.includes('缺料') ? 'text-red-600 font-bold' : 'text-slate-500'}`}>{getDisplayStock(i.partNo, i.stockQty)}</td>
                                                     </tr>
@@ -650,23 +656,22 @@
             return (
                 <div className="flex flex-col h-full p-4 sm:p-6 text-left">
                     {data.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center flex-1 text-slate-500 p-8">
-                            <div className="comfy-panel rounded-full p-6 mb-6">
+                        <div className="flex flex-col items-center justify-center flex-1 text-blue-600 p-8">
+                            <div className="content-panel rounded-full p-6 mb-6 holo-glow border-slate-200">
                                 <Icon name="database" className={`w-16 h-16 ${isSyncing ? 'animate-spin text-blue-500' : 'text-blue-500'}`} />
                             </div>
-                            <p className="text-2xl font-bold text-slate-700 tracking-wider text-center">尚未同步{title}資料</p>
-                            <p className="text-base mt-3 text-slate-500 tracking-wide text-center">正在為您取得最新資料...</p>
+                            <p className="text-base mt-3 text-blue-700 tracking-widest text-center font-mono">正在為您取得最新資料...</p>
                         </div>
                     ) : (
-                        <div className="comfy-panel flex-1 overflow-hidden flex flex-col bg-white">
+                        <div className="content-panel flex-1 overflow-hidden flex flex-col">
                             <div className="overflow-auto flex-1">
-                                <table className="w-full table-auto text-left border-collapse">
-                                    <thead className="bg-slate-100 sticky top-0 z-10 text-[10px] sm:text-sm font-bold text-slate-600 uppercase tracking-widest border-b border-slate-300">
+                                <table className="w-full table-auto text-left border-collapse bg-white">
+                                    <thead className="bg-slate-50 sticky top-0 z-10 text-[10px] sm:text-sm font-bold text-blue-800 uppercase tracking-widest border-b border-slate-200">
                                         <tr>
                                             <th className="p-3 sm:p-4 w-10 sm:w-12 text-center whitespace-nowrap">#</th>
                                             <th className="p-3 sm:p-4 text-left min-w-[120px] break-all">料號</th>
                                             <th className="p-3 sm:p-4 text-left min-w-[200px] break-words">品名</th>
-                                            <th className="p-3 sm:p-4 text-center bg-blue-50 text-blue-800 whitespace-nowrap">現有庫存</th>
+                                            <th className="p-3 sm:p-4 text-center bg-blue-50 text-blue-700 whitespace-nowrap border-x border-slate-100">現有庫存</th>
                                             {showDataPanel && <th className="p-3 sm:p-4 text-center whitespace-nowrap">數據面板</th>}
                                         </tr>
                                     </thead>
@@ -676,12 +681,12 @@
                                                 <td className="p-3 sm:p-4 text-center text-slate-400 font-sans whitespace-nowrap">{idx + 1}</td>
                                                 <td className="p-3 sm:p-4 font-bold text-slate-800 text-left break-all">{row.id}</td>
                                                 <td className="p-3 sm:p-4 text-slate-500 text-[10px] sm:text-sm font-sans leading-relaxed break-words">{row.spec}</td>
-                                                <td className="p-3 sm:p-4 text-center font-black text-blue-600 text-base sm:text-lg bg-blue-50/40 whitespace-nowrap">
+                                                <td className="p-3 sm:p-4 text-center font-black text-blue-600 text-base sm:text-lg bg-blue-50/50 whitespace-nowrap border-x border-slate-100">
                                                     {title === '物料庫存' && Number(row.allUsageStock) < 0 ? 0 : row.allUsageStock}
                                                 </td>
                                                 {showDataPanel && (
                                                     <td className="p-3 sm:p-4 text-center font-sans whitespace-nowrap">
-                                                        <button onClick={() => setSelected(row)} className="px-2 py-1 sm:px-3 sm:py-1.5 bg-slate-800 text-white border border-slate-700 rounded text-[10px] sm:text-xs font-bold hover:bg-slate-700 transition-colors shadow-sm whitespace-nowrap">季報與平均</button>
+                                                        <button onClick={() => setSelected(row)} className="px-2 py-1 sm:px-3 sm:py-1.5 bg-white text-blue-600 border border-slate-300 rounded text-[10px] sm:text-xs font-bold hover:bg-blue-50 hover:border-blue-400 transition-colors shadow-sm whitespace-nowrap">季報與平均</button>
                                                     </td>
                                                 )}
                                             </tr>
@@ -723,19 +728,17 @@
                 { id: 'remarks', label: '備註', keys: ['備註', '備註欄'] }
             ];
 
-            const [module, setModule] = useState('order'); 
-            const [isSyncing, setIsSyncing] = useState(false); // API 同步狀態 (獨立)
-            const [isUploading, setIsUploading] = useState(false); // Excel 上傳狀態 (獨立)
+            const [module, setModule] = useState('materialInventory'); 
+            const [isSyncing, setIsSyncing] = useState(false); 
+            const [isUploading, setIsUploading] = useState(false); 
             const [msg, setMsg] = useState(null);
             
-            // 搜尋與篩選狀態統一放置於頂層
             const [globalSearch, setGlobalSearch] = useState('');
             const [dates, setDates] = useState({ start: '', end: '' });
             const [onlyShortage, setOnlyShortage] = useState(false);
 
             const [orderState, setOrderState] = useState({ data: [], files: [] });
             
-            // 狀態中區分 materialInventory 與 consumableInventory
             const [invState, setInvState] = useState({ 
                 data: { workOrders: [], issued: [], pendingShipment: [], materialInventory: [], consumableInventory: [] }, 
                 files: [] 
@@ -782,14 +785,12 @@
                 };
             }, [orderState.data, invState.data, globalSearch]);
 
-            // 雲端同步 - API
             const handleSyncCloud = async () => {
                 setIsSyncing(true);
                 setMsg({ type: 'info', text: '正在同步 API 資料...' });
                 try {
                     let response;
                     try {
-                        // 加入 headers 及 empty JSON body 避免 PowerAutomate 因缺少 body 報錯
                         response = await fetch(API_URL, { 
                             method: 'POST', 
                             headers: { 'Content-Type': 'application/json' },
@@ -797,7 +798,6 @@
                         });
                         if (!response.ok) throw new Error("POST Failed");
                     } catch (e) {
-                        // 如果 POST 發生跨網域 (CORS) 或錯誤，退回使用 GET 嘗試
                         console.warn("API POST 失敗，嘗試使用 GET...", e);
                         response = await fetch(API_URL);
                     }
@@ -811,7 +811,6 @@
                     let rawMaterials = [];
                     let rawConsumables = [];
 
-                    // 1. 扁平化與自動分類 API 結構
                     let foundArrays = [];
                     if (Array.isArray(cloudDataRaw)) {
                         foundArrays.push({ name: 'default', data: cloudDataRaw });
@@ -829,7 +828,6 @@
                         }
                     }
 
-                    // 2. 智慧分流：物料 vs 耗材
                     foundArrays.forEach(arrObj => {
                         const { name, data } = arrObj;
                         if (data.length === 0) return;
@@ -860,7 +858,6 @@
                         });
                     });
 
-                    // 3. 欄位映射引擎
                     const mapData = (rawDataArray, isConsumable) => {
                         if (!Array.isArray(rawDataArray) || rawDataArray.length === 0) return [];
                         
@@ -990,7 +987,7 @@
 
             const onUploadInv = async (files) => {
                 if (!files || files.length === 0) return;
-                setIsUploading(true); setMsg({ type: 'info', text: '正在讀取用料...' });
+                setIsUploading(true); setMsg({ type: 'info', text: '正在讀取用料明細...' });
                 try {
                     const results = await Promise.all(files.map(file => readExcelFile(file).then(workbook => parseInventoryData(workbook))));
                     let merged = { 
@@ -1006,7 +1003,7 @@
                         merged.pendingShipment = [...merged.pendingShipment, ...res.data.pendingShipment];
                     });
                     setInvState({ data: merged, files: files.map(f => f.name) });
-                    setMsg({ type: 'success', text: '成功載入用料分配' });
+                    setMsg({ type: 'success', text: '成功載入用料明細' });
                 } catch (err) { 
                     console.error(err);
                     setMsg({ type: 'error', text: '上傳失敗：未找到符合的資料表' }); 
@@ -1025,15 +1022,15 @@
                                  ((invState.data.materialInventory.length || invState.data.consumableInventory.length) ? ['API 雲端同步'] : []));
 
             return (
-                <div className="h-screen w-full flex flex-col overflow-hidden bg-slate-50 font-sans text-slate-800">
-                    <header className="bg-white border-b border-slate-200 shrink-0 z-20 shadow-sm relative flex flex-col">
+                <div className="h-screen w-full flex flex-col overflow-hidden bg-transparent font-sans text-slate-800">
+                    <header className="content-panel rounded-none border-x-0 border-t-0 border-b border-slate-200 shrink-0 z-20 relative flex flex-col">
                         <div className="px-4 py-3 flex flex-wrap items-center gap-3">
                             {/* Logo & Title */}
                             <div className="flex items-center gap-2 shrink-0 md:mr-2">
                                 <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-center shadow-sm">
                                     <Icon name="layers" className="w-5 h-5 text-blue-600" />
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl font-black text-slate-800 uppercase tracking-tighter hidden md:block">綜合查詢</h1>
+                                <h1 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 uppercase tracking-tighter hidden md:block drop-shadow-sm">綜合查詢</h1>
                             </div>
 
                             {/* Module Nav */}
@@ -1047,12 +1044,12 @@
                                 <input 
                                     type="text" 
                                     placeholder={getSearchPlaceholder()} 
-                                    className="w-full bg-slate-100 border border-slate-200 rounded-lg py-2 pl-10 pr-10 text-base focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition-all shadow-sm" 
+                                    className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-10 pr-10 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-slate-800 placeholder-slate-400 transition-all shadow-sm" 
                                     value={globalSearch} 
                                     onChange={e => setGlobalSearch(e.target.value)} 
                                 />
                                 {globalSearch && (
-                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" onClick={() => setGlobalSearch('')}>
+                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500 transition-colors" onClick={() => setGlobalSearch('')}>
                                         <Icon name="x" className="w-5 h-5" />
                                     </button>
                                 )}
@@ -1061,30 +1058,30 @@
                             {/* Dynamic Actions */}
                             <div className="flex flex-wrap items-center gap-2 md:ml-auto shrink-0">
                                 {module === 'order' && (
-                                    <div className="flex items-center gap-2 text-base text-slate-600 bg-slate-50 p-1.5 rounded-lg border border-slate-200 shadow-sm">
+                                    <div className="flex items-center gap-2 text-base text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 shadow-sm">
                                         <Icon name="calendar" className="text-blue-500 w-5 h-5 ml-1" />
                                         <input type="date" className="bg-transparent border-none text-slate-700 font-mono text-sm sm:text-base outline-none cursor-pointer" style={{colorScheme: 'light'}} value={dates.start} onChange={e => setDates({...dates, start: e.target.value})} />
                                         <span className="text-sm font-bold text-slate-400">~</span>
                                         <input type="date" className="bg-transparent border-none text-slate-700 font-mono text-sm sm:text-base outline-none cursor-pointer" style={{colorScheme: 'light'}} value={dates.end} onChange={e => setDates({...dates, end: e.target.value})} />
-                                        {(dates.start || dates.end) && <button onClick={() => setDates({start:'', end:''})} className="text-red-600 hover:bg-red-600 hover:text-white px-2 py-1 rounded border border-red-300 transition-colors text-xs font-bold bg-white shadow-sm ml-1">清除</button>}
+                                        {(dates.start || dates.end) && <button onClick={() => setDates({start:'', end:''})} className="text-red-600 hover:bg-red-50 hover:text-red-700 px-2 py-1 rounded border border-red-300 transition-colors text-xs font-bold shadow-sm ml-1">清除</button>}
                                     </div>
                                 )}
 
                                 {module === 'inventory' && (
-                                    <button onClick={() => setOnlyShortage(!onlyShortage)} className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-all whitespace-nowrap shadow-sm ${onlyShortage ? 'bg-red-50 border-red-400 text-red-600' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}`}>
+                                    <button onClick={() => setOnlyShortage(!onlyShortage)} className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-all whitespace-nowrap shadow-sm ${onlyShortage ? 'bg-red-50 border-red-300 text-red-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600'}`}>
                                         <div className="flex items-center gap-1"><Icon name="alert" className="w-4 h-4" /> 只看缺料</div>
                                     </button>
                                 )}
 
                                 {(module === 'materialInventory' || module === 'consumableInventory') && (
-                                    <button onClick={handleSyncCloud} disabled={isSyncing} className={`px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-1.5 shadow-sm transition-all whitespace-nowrap ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    <button onClick={handleSyncCloud} disabled={isSyncing} className={`px-3 py-1.5 bg-blue-600 border border-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-1.5 shadow-md transition-all whitespace-nowrap ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <Icon name="refresh" className={isSyncing ? 'animate-spin w-4 h-4' : 'w-4 h-4'} /> {isSyncing ? '同步中' : '重新整理'}
                                     </button>
                                 )}
 
                                 {(module === 'order' || module === 'inventory') && (
-                                    <label className={`px-3 py-1.5 bg-slate-800 text-white rounded-lg text-sm font-bold flex items-center gap-1.5 shadow-sm transition-all whitespace-nowrap ${isUploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-slate-700'}`}>
-                                        <Icon name="upload" className={isUploading ? "w-4 h-4 animate-bounce" : "w-4 h-4"} /> {isUploading ? '處理中...' : '上傳 Excel'}
+                                    <label className={`px-3 py-1.5 bg-slate-800 border border-slate-800 text-white rounded-lg text-sm font-bold flex items-center gap-1.5 shadow-md transition-all whitespace-nowrap ${isUploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-slate-700'}`}>
+                                        <Icon name="upload" className={isUploading ? "w-4 h-4 animate-bounce text-white" : "w-4 h-4 text-white/90"} /> {isUploading ? '處理中...' : '上傳 Excel'}
                                         <input type="file" multiple accept=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/csv" className="hidden" onChange={e => { 
                                             const files = Array.from(e.target.files);
                                             if (files.length === 0) return;
@@ -1099,9 +1096,9 @@
 
                         {/* Status / Message Bar (Compact) */}
                         {(currentFiles.length > 0 || msg) && (
-                            <div className="px-4 py-1.5 bg-slate-50 border-t border-slate-200 flex items-center gap-3 text-[10px] sm:text-xs font-mono text-slate-500 overflow-x-auto no-scrollbar">
+                            <div className="px-4 py-1.5 bg-slate-50 border-t border-slate-200 flex items-center gap-3 text-[10px] sm:text-xs font-mono text-slate-600 overflow-x-auto no-scrollbar">
                                 {currentFiles.length > 0 && (
-                                    <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap">
+                                    <span className="text-blue-700 bg-blue-100 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap">
                                         來源: {currentFiles.join(', ')}
                                     </span>
                                 )}
@@ -1114,17 +1111,17 @@
                         )}
                     </header>
 
-                    <main className="flex-1 relative">
-                        <div className={`absolute inset-0 transition-opacity duration-300 ${module === 'order' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+                    <main className="flex-1 relative p-4 md:p-6 overflow-hidden">
+                        <div className={`absolute inset-4 md:inset-6 transition-opacity duration-300 ${module === 'order' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
                             <OrderSystem data={orderState.data} columns={allOrderColumns} globalSearch={globalSearch} dates={dates} />
                         </div>
-                        <div className={`absolute inset-0 transition-opacity duration-300 ${module === 'inventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+                        <div className={`absolute inset-4 md:inset-6 transition-opacity duration-300 ${module === 'inventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
                             <InventorySystem data={invState.data} globalSearch={globalSearch} onlyShortage={onlyShortage} />
                         </div>
-                        <div className={`absolute inset-0 transition-opacity duration-300 ${module === 'materialInventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+                        <div className={`absolute inset-4 md:inset-6 transition-opacity duration-300 ${module === 'materialInventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
                             <StockSystem title="物料庫存" data={invState.data.materialInventory || []} isSyncing={isSyncing} showDataPanel={true} globalSearch={globalSearch} />
                         </div>
-                        <div className={`absolute inset-0 transition-opacity duration-300 ${module === 'consumableInventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+                        <div className={`absolute inset-4 md:inset-6 transition-opacity duration-300 ${module === 'consumableInventory' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
                             <StockSystem title="耗材庫存" data={invState.data.consumableInventory || []} isSyncing={isSyncing} showDataPanel={false} globalSearch={globalSearch} />
                         </div>
                     </main>
