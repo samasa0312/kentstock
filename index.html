@@ -287,6 +287,7 @@
                         let rawPlanned = getQtyValue(row, '用料表數量');
                         let rawStock = getQtyValue(row, '庫存');
 
+                        // 支援搜尋更多可能的進/出貨欄位名稱
                         const getValByKeys = (keys) => {
                             const foundKey = Object.keys(row).find(k => keys.some(searchKey => cleanKey(k).includes(cleanKey(searchKey))));
                             return foundKey ? processDateValue(row[foundKey]) : '';
@@ -302,8 +303,8 @@
                             stockQty: isNaN(rawStock) ? 0 : rawStock,
                             status: row['狀態'] || '',
                             note: row['備註'] || row['注意事項'] || '',
-                            recvDate: getValByKeys(['預計進貨', '收貨日', '到貨日', '進貨日']),
-                            shipDate: getValByKeys(['預計出貨', '出貨日'])
+                            recvDate: getValByKeys(['預計進貨', '收貨日', '到貨日', '進貨日', '進貨資訊']),
+                            shipDate: getValByKeys(['預計出貨', '出貨日', '出貨資訊'])
                         };
                     }).filter(item => item.id);
                     result[targetKey] = [...result[targetKey], ...mappedData];
@@ -576,8 +577,8 @@
                             <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-6">
                                 {grouped.map(g => (
                                     <div key={g.id} onClick={() => setSelected(g)} className={`content-panel p-4 sm:p-5 cursor-pointer transition-all hover:border-teal-300 hover:shadow-md ${g.hasShortage ? 'shortage-alert-card' : ''}`}>
-                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start text-left gap-3 sm:gap-0">
-                                            <div className="flex gap-3 items-center flex-wrap">
+                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-left gap-3 sm:gap-0">
+                                            <div className="flex gap-3 items-center flex-wrap flex-1">
                                                 <StatusBadge status={g.mainStatus} />
                                                 <div className="text-lg sm:text-xl font-bold text-slate-800 break-all">{g.id}</div>
                                                 {g.hasShortage && (
@@ -585,14 +586,14 @@
                                                         <Icon name="alert" className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 animate-bounce" /> 缺料警告
                                                     </div>
                                                 )}
-                                            </div>
-                                            <div className="flex flex-wrap items-center gap-3 sm:ml-4 shrink-0">
                                                 {(g.recvDate || g.shipDate) && (
-                                                    <div className="flex flex-col text-xs sm:text-sm font-tech-mono text-slate-500 border-r border-slate-200 pr-3">
+                                                    <div className="flex items-center gap-3 text-xs sm:text-sm font-tech-mono text-slate-500 bg-white/60 px-3 py-1 rounded border border-slate-200 ml-1">
                                                         {g.recvDate && <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>進貨: <span className="text-slate-800 font-bold">{g.recvDate}</span></div>}
                                                         {g.shipDate && <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>出貨: <span className="text-slate-800 font-bold">{g.shipDate}</span></div>}
                                                     </div>
                                                 )}
+                                            </div>
+                                            <div className="flex flex-wrap items-center gap-3 sm:ml-4 shrink-0 mt-3 sm:mt-0">
                                                 <div className="text-sm sm:text-base font-tech-mono text-slate-600 whitespace-nowrap bg-slate-50 px-3 py-1 rounded border border-slate-200 w-fit">需求: <span className="text-teal-600 font-bold text-lg sm:text-xl">{g.mainQty}</span></div>
                                             </div>
                                         </div>
