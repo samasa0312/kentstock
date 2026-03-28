@@ -589,17 +589,17 @@
                                                 {(g.recvDate || g.shipDate) && (
                                                     <div className="flex flex-row flex-wrap gap-2 ml-1 flex-1 min-w-[200px]">
                                                         {g.recvDate && (
-                                                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
-                                                                <span className="shrink-0">進貨:</span> 
-                                                                <span className="text-slate-800 font-bold break-words">{g.recvDate}</span>
+                                                            <div className="flex items-start gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5"></span>
+                                                                <span className="shrink-0 mt-0.5">進貨:</span> 
+                                                                <span className="text-slate-800 font-bold whitespace-pre-wrap break-words leading-relaxed">{g.recvDate}</span>
                                                             </div>
                                                         )}
                                                         {g.shipDate && (
-                                                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
-                                                                <span className="shrink-0">出貨:</span> 
-                                                                <span className="text-slate-800 font-bold break-words">{g.shipDate}</span>
+                                                            <div className="flex items-start gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0 mt-1.5"></span>
+                                                                <span className="shrink-0 mt-0.5">出貨:</span> 
+                                                                <span className="text-slate-800 font-bold whitespace-pre-wrap break-words leading-relaxed">{g.shipDate}</span>
                                                             </div>
                                                         )}
                                                     </div>
