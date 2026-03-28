@@ -19,7 +19,7 @@
             font-family: 'Inter', 'Noto Sans TC', sans-serif; 
             background-color: #f0fdfa; /* 舒適明亮底色 */
             /* 更新為指定的背景圖 */
-            background-image: url('./123.jpg');
+            background-image: url('./123.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -45,10 +45,10 @@
         
         /* 舒適閱讀實體微透白面板 */
         .content-panel {
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: rgba(255, 255, 255, 0.65); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.6);
             box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
             border-radius: 0.75rem;
         }
@@ -453,8 +453,8 @@
 
                             <div className="content-panel rounded-tl-none flex-1 overflow-hidden flex flex-col">
                                 <div className="overflow-auto flex-1">
-                                    <table className="w-full table-auto text-left border-collapse min-w-max bg-white">
-                                        <thead className="bg-slate-50 sticky top-0 z-10 text-xs sm:text-sm font-bold text-teal-800 uppercase tracking-widest border-b border-slate-200">
+                                    <table className="w-full table-auto text-left border-collapse min-w-max bg-white/40 backdrop-blur-sm">
+                                        <thead className="bg-white/60 sticky top-0 z-10 text-xs sm:text-sm font-bold text-teal-800 uppercase tracking-widest border-b border-white/50">
                                             <tr>
                                                 <th className="px-3 py-3 w-12 text-center whitespace-nowrap">#</th>
                                                 {columns.filter(c => activeTab === 'recv' ? c.id !== 'shipDate' : c.id !== 'recvDate').filter(c => !['notes', 'remarks'].includes(c.id)).map(col => (
@@ -462,9 +462,9 @@
                                                 ))}
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+                                        <tbody className="divide-y divide-white/40 text-sm text-slate-700">
                                             {displayData.map((row, idx) => (
-                                                <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                                                <tr key={idx} className="hover:bg-white/60 transition-colors">
                                                     <td className="px-3 py-2 text-center text-slate-400 font-tech-mono whitespace-nowrap align-top">{idx + 1}</td>
                                                     {columns.filter(c => activeTab === 'recv' ? c.id !== 'shipDate' : c.id !== 'recvDate').filter(c => !['notes', 'remarks'].includes(c.id)).map(col => (
                                                         <td key={col.id} className={`px-3 py-2 min-w-[90px] max-w-[250px] break-words whitespace-pre-wrap align-top ${col.id === 'workOrder' ? 'text-teal-700 font-bold text-base' : ''}`}>
@@ -587,9 +587,21 @@
                                                     </div>
                                                 )}
                                                 {(g.recvDate || g.shipDate) && (
-                                                    <div className="flex flex-col gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-500 bg-white/60 px-3 py-2 rounded border border-slate-200 ml-1 flex-1 min-w-[200px]">
-                                                        {g.recvDate && <div className="flex items-start gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-1.5"></span><span className="shrink-0 mt-0.5">進貨:</span> <span className="text-slate-800 font-bold whitespace-pre-wrap break-words leading-relaxed">{g.recvDate}</span></div>}
-                                                        {g.shipDate && <div className="flex items-start gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0 mt-1.5"></span><span className="shrink-0 mt-0.5">出貨:</span> <span className="text-slate-800 font-bold whitespace-pre-wrap break-words leading-relaxed">{g.shipDate}</span></div>}
+                                                    <div className="flex flex-row flex-wrap gap-2 ml-1 flex-1 min-w-[200px]">
+                                                        {g.recvDate && (
+                                                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0"></span>
+                                                                <span className="shrink-0">進貨:</span> 
+                                                                <span className="text-slate-800 font-bold break-words">{g.recvDate}</span>
+                                                            </div>
+                                                        )}
+                                                        {g.shipDate && (
+                                                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-tech-mono text-slate-700 bg-white/50 px-3 py-2 rounded border border-white/50 shadow-sm flex-1 min-w-[140px] backdrop-blur-sm">
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
+                                                                <span className="shrink-0">出貨:</span> 
+                                                                <span className="text-slate-800 font-bold break-words">{g.shipDate}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
@@ -682,23 +694,23 @@
                     ) : (
                         <div className="content-panel flex-1 overflow-hidden flex flex-col">
                             <div className="overflow-auto flex-1">
-                                <table className="w-full table-auto text-left border-collapse bg-white">
-                                    <thead className="bg-slate-50 sticky top-0 z-10 text-[10px] sm:text-sm font-bold text-teal-800 uppercase tracking-widest border-b border-slate-200">
+                                <table className="w-full table-auto text-left border-collapse bg-white/40 backdrop-blur-sm">
+                                    <thead className="bg-white/60 sticky top-0 z-10 text-[10px] sm:text-sm font-bold text-teal-800 uppercase tracking-widest border-b border-white/50">
                                         <tr>
                                             <th className="p-3 sm:p-4 w-10 sm:w-12 text-center whitespace-nowrap">#</th>
                                             <th className="p-3 sm:p-4 text-left min-w-[120px] break-all">料號</th>
                                             <th className="p-3 sm:p-4 text-left min-w-[200px] break-words">品名</th>
-                                            <th className="p-3 sm:p-4 text-center bg-teal-50 text-teal-700 whitespace-nowrap border-x border-slate-200">現有庫存</th>
+                                            <th className="p-3 sm:p-4 text-center bg-teal-50/70 text-teal-800 whitespace-nowrap border-x border-white/40">現有庫存</th>
                                             {showDataPanel && <th className="p-3 sm:p-4 text-center whitespace-nowrap">數據面板</th>}
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100 text-sm sm:text-base text-slate-700 font-mono">
+                                    <tbody className="divide-y divide-white/40 text-sm sm:text-base text-slate-700 font-mono">
                                         {filtered.map((row, idx) => (
-                                            <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                                                <td className="p-3 sm:p-4 text-center text-slate-400 font-sans whitespace-nowrap">{idx + 1}</td>
+                                            <tr key={idx} className="hover:bg-white/60 transition-colors">
+                                                <td className="p-3 sm:p-4 text-center text-slate-500 font-sans whitespace-nowrap">{idx + 1}</td>
                                                 <td className="p-3 sm:p-4 font-bold text-slate-800 text-left break-all">{row.id}</td>
-                                                <td className="p-3 sm:p-4 text-slate-500 text-[10px] sm:text-sm font-sans leading-relaxed break-words">{row.spec}</td>
-                                                <td className="p-3 sm:p-4 text-center font-black text-slate-800 text-base sm:text-lg bg-slate-50/80 whitespace-nowrap border-x border-slate-200">
+                                                <td className="p-3 sm:p-4 text-slate-600 text-[10px] sm:text-sm font-sans leading-relaxed break-words">{row.spec}</td>
+                                                <td className="p-3 sm:p-4 text-center font-black text-slate-800 text-base sm:text-lg bg-white/40 whitespace-nowrap border-x border-white/30">
                                                     {title === '物料庫存' && Number(row.allUsageStock) < 0 ? 0 : row.allUsageStock}
                                                 </td>
                                                 {showDataPanel && (
@@ -1061,7 +1073,7 @@
                                 <input 
                                     type="text" 
                                     placeholder={getSearchPlaceholder()} 
-                                    className="w-full bg-white border border-slate-200 rounded-lg py-2 pl-10 pr-10 text-base focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none text-slate-800 placeholder-slate-400 transition-all shadow-sm" 
+                                    className="w-full bg-white/70 backdrop-blur-md border border-slate-200 rounded-lg py-2 pl-10 pr-10 text-base focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none text-slate-800 placeholder-slate-500 transition-all shadow-sm" 
                                     value={globalSearch} 
                                     onChange={e => setGlobalSearch(e.target.value)} 
                                 />
@@ -1075,9 +1087,9 @@
                             {/* Dynamic Actions */}
                             <div className="flex flex-wrap items-center gap-2 md:ml-auto shrink-0">
                                 {module === 'order' && (
-                                    <div className="flex items-center gap-2 text-base text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 shadow-sm">
+                                    <div className="flex items-center gap-2 text-base text-slate-600 bg-white/70 backdrop-blur-md p-1.5 rounded-lg border border-slate-200 shadow-sm">
                                         <Icon name="calendar" className="text-teal-500 w-5 h-5 ml-1" />
-                                        <input type="date" className="bg-transparent border-none text-slate-700 font-mono text-sm sm:text-base outline-none cursor-pointer" style={{colorScheme: 'light'}} value={dates.start} onChange={e => setDates({...dates, start: e.target.value})} />
+                                        <input type="date" className="bg-transparent border-none text-slate-800 font-mono text-sm sm:text-base outline-none cursor-pointer" style={{colorScheme: 'light'}} value={dates.start} onChange={e => setDates({...dates, start: e.target.value})} />
                                         <span className="text-sm font-bold text-slate-400">~</span>
                                         <input type="date" className="bg-transparent border-none text-slate-700 font-mono text-sm sm:text-base outline-none cursor-pointer" style={{colorScheme: 'light'}} value={dates.end} onChange={e => setDates({...dates, end: e.target.value})} />
                                         {(dates.start || dates.end) && <button onClick={() => setDates({start:'', end:''})} className="text-red-600 hover:bg-red-50 hover:text-red-700 px-2 py-1 rounded border border-red-300 transition-colors text-xs font-bold shadow-sm ml-1">清除</button>}
@@ -1113,9 +1125,9 @@
 
                         {/* Status / Message Bar (Compact) */}
                         {(currentFiles.length > 0 || msg) && (
-                            <div className="px-4 py-1.5 bg-slate-50 border-t border-slate-200 flex items-center gap-3 text-[10px] sm:text-xs font-mono text-slate-600 overflow-x-auto no-scrollbar">
+                            <div className="px-4 py-1.5 bg-white/40 backdrop-blur-sm border-t border-slate-200/50 flex items-center gap-3 text-[10px] sm:text-xs font-mono text-slate-600 overflow-x-auto no-scrollbar">
                                 {currentFiles.length > 0 && (
-                                    <span className="text-teal-700 bg-teal-100 px-2 py-0.5 rounded border border-teal-200 whitespace-nowrap">
+                                    <span className="text-teal-800 bg-teal-100/80 px-2 py-0.5 rounded border border-teal-200/50 whitespace-nowrap">
                                         來源: {currentFiles.join(', ')}
                                     </span>
                                 )}
